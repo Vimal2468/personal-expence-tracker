@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Personal Expense Tracker</title>
+  <style>
+    :root {
+      --primary-color: #080a0c;
+      --secondary-color: #4caf50;
+      --danger-color: #f44336;
+      --warning-color: #ff9800;
+      --light-bg: #f5f7fa;
+      --white: #ffffff;
+      --text-dark: #2c3e50;
+      --text-light: #7f8c8d;
+      --border-color: #e1e5e9;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light-bg);
+      margin: 0;
+      padding: 0;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    #authContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100%;
+    }
+
+    .auth-form {
+      width: 100%;
+      max-width: 400px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border-color);
+    }
+
+    .auth-form h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+
+    .auth-form p {
+      text-align: center;
+      margin-bottom: 25px;
+      color: var(--text-light);
+    }
+
+    .auth-form input {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--text-dark);
+      font-size: 16px;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .auth-form input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(18, 20, 21, 0.2);
+    }
+
+    .auth-form button {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      background: var(--primary-color);
+      color: white;
+      margin-top: 10px;
+    }
+
+    .auth-form button:hover {
+      background: #70819b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-light);
+    }
+
+    .auth-switch a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .auth-switch a:hover {
+      text-decoration: underline;
+    }
+
+    #appContainer {
+      display: none;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 50px;
+      font-size: 1.5rem;
+      color: var(--text-dark);
+      text-align: center;
+    }
+
+    form {
+      width: 100%;
+      max-width: 600px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 25px 30px;
+      margin: 20px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    form:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    input, select {
+      width: calc(33.33% - 12px);
+      padding: 12px 15px;
+      margin: 8px 6px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--text-dark);
+      font-size: 16px;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #a0a4a8;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+
+    button {
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+
+    form#expenseForm button {
+      width: calc(33.33% - 12px);
+      background: var(--secondary-color);
+      color: white;
+      box-shadow: 0 2px 5px rgba(76, 175, 80, 0.2);
+    }
+
+    form#expenseForm button:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+    }
+
+    .delete-btn {
+      background: var(--danger-color);
+      color: white;
+      box-shadow: 0 2px 5px rgba(244, 67, 54, 0.2);
+    }
+
+    .delete-btn:hover {
+      background: #e53935;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+    }
+
+    .delete-all-btn {
+      width: 100%;
+      background: var(--danger-color);
+      color: white;
+      box-shadow: 0 2px 5px rgba(244, 67, 54, 0.2);
+      margin-top: 10px;
+    }
+
+    .delete-all-btn:hover {
+      background: #e53935;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+    }
+
+    .budget-btn {
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 2px 5px rgba(33, 150, 243, 0.2);
+    }
+
+    .budget-btn:hover {
+      background: #1e88e5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+    }
+
+    #deleteForm input {
+      width: 65%;
+    }
+
+    #deleteForm button {
+      width: 30%;
+    }
+
+    #budgetDisplay {
+      width: 100%;
+      max-width: 600px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 20px 30px;
+      margin: 20px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      color: var(--text-dark);
+      font-size: 1.2rem;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+    }
+
+    #budgetDisplay span {
+      font-size: 1.5rem;
+    }
+
+    .positive {
+      color: var(--secondary-color);
+    }
+
+    .negative {
+      color: var(--danger-color);
+    }
+
+    .warning {
+      color: var(--warning-color);
+    }
+
+    /* ====== EXPENSE LIST STYLES ====== */
+    #expenseList {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    #expenseList h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .expense-item {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 15px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s ease;
+    }
+
+    .expense-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .expense-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .expense-category {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      margin-bottom: 5px;
+    }
+
+    .expense-date {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .expense-amount {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--danger-color);
+    }
+
+    .expense-id {
+      font-size: 0.8rem;
+      color: #95a5a6;
+      margin-top: 5px;
+    }
+
+    .empty-list {
+      text-align: center;
+      color: var(--text-light);
+      font-style: italic;
+      padding: 30px;
+      background: var(--white);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Budget Prediction Styles */
+    #predictionDisplay {
+      width: 100%;
+      max-width: 600px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 20px 30px;
+      margin: 20px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      color: var(--text-dark);
+      font-size: 1rem;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+    }
+
+    .prediction-positive {
+      color: var(--secondary-color);
+    }
+
+    .prediction-warning {
+      color: var(--warning-color);
+    }
+
+    .prediction-danger {
+      color: var(--danger-color);
+    }
+
+    .user-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 20px;
+    }
+
+    .user-greeting {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .logout-btn {
+      background: var(--text-light);
+      color: white;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+
+    .logout-btn:hover {
+      background: #6c7c7d;
+    }
+
+    .password-strength {
+      height: 5px;
+      margin-top: 5px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .strength-weak {
+      background-color: var(--danger-color);
+      width: 25%;
+    }
+
+    .strength-medium {
+      background-color: var(--warning-color);
+      width: 50%;
+    }
+
+    .strength-strong {
+      background-color: var(--secondary-color);
+      width: 100%;
+    }
+
+    @media (max-width: 700px) {
+      input, select, button {
+        width: 100%;
+        margin: 8px 0;
+      }
+      #deleteForm input,
+      #deleteForm button {
+        width: 100%;
+      }
+      
+      form#expenseForm button {
+        width: 100%;
+      }
+      
+      .expense-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .expense-amount {
+        margin-top: 10px;
+        align-self: flex-end;
+      }
+      
+      .user-info {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Auth Container -->
+  <div id="authContainer" class="container">
+    <!-- Login Form -->
+    <form id="loginForm" class="auth-form">
+      <h1>Personal Expense Tracker</h1>
+      <p>Sign in to your account</p>
+      <input type="text" id="loginUsername" placeholder="Username" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <div class="auth-switch">
+        Don't have an account? <a id="showSignup">Sign up</a>
+      </div>
+    </form>
+
+    <!-- Signup Form -->
+    <form id="signupForm" class="auth-form" style="display: none;">
+      <h1>Create Account</h1>
+      <p>Sign up for a new account</p>
+      <input type="text" id="signupName" placeholder="Full Name" required />
+      <input type="text" id="signupUsername" placeholder="Username" required />
+      <input type="email" id="signupEmail" placeholder="Email" required />
+      <input type="password" id="signupPassword" placeholder="Password" required />
+      <div class="password-strength" id="passwordStrength"></div>
+      <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required />
+      <button type="submit">Sign Up</button>
+      <div class="auth-switch">
+        Already have an account? <a id="showLogin">Sign in</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Main App Container -->
+  <div id="appContainer" class="container">
+    <div class="user-info">
+      <div class="user-greeting">Hello, <span id="userName">User</span>!</div>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+    
+    <h1>Personal Expense Tracker</h1>
+
+    <!-- Budget Section -->
+    <div id="budgetDisplay">
+      <p>Remaining Budget: <span id="remainingBudget">0.00</span></p>
+    </div>
+
+    <form id="budgetForm">
+      <input type="number" id="budgetAmount" placeholder="Budget Amount" required />
+      <select id="budgetType">
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+      <button type="submit" class="budget-btn">Set Budget</button>
+    </form>
+
+    <!-- Budget Prediction Section -->
+    <div id="predictionDisplay">
+      <p id="predictionText">Set a budget to see spending predictions</p>
+    </div>
+
+    <form id="expenseForm">
+      <input type="number" id="amount" placeholder="Amount" required />
+      <input type="text" id="category" placeholder="Category" required />
+      <input type="date" id="date" required />
+      <button type="submit">Add Expense</button>
+    </form>
+
+    <div id="expenseList">
+      <h2>Your Expenses</h2>
+      <div id="expensesContainer"></div>
+      <button id="deleteAllBtn" class="delete-all-btn">Delete All Expenses</button>
+    </div>
+
+    <h2>Delete an Expense</h2>
+    <form id="deleteForm">
+      <input type="text" id="deleteId" placeholder="Enter Expense ID" required />
+      <button type="submit" class="delete-btn">Delete</button>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE = 'https://x9vru1ec3j.execute-api.us-east-1.amazonaws.com/prod'; 
+
+    // User storage key
+    const USER_STORAGE_KEY = 'expenseTrackerUsers';
+    let currentBudget = 0;
+    let budgetType = "weekly"; // "weekly" or "monthly"
+    let expenses = [];
+    let currentUser = null;
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize user storage if it doesn't exist
+      if (!localStorage.getItem(USER_STORAGE_KEY)) {
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({}));
+      }
+      
+      // Check if user is already logged in
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        showApp();
+      } else {
+        showAuth();
+      }
+    });
+
+    // Show authentication forms
+    function showAuth() {
+      document.getElementById('authContainer').style.display = 'flex';
+      document.getElementById('appContainer').style.display = 'none';
+    }
+
+    // Show main app
+    function showApp() {
+      document.getElementById('authContainer').style.display = 'none';
+      document.getElementById('appContainer').style.display = 'block';
+      
+      // Update user name
+      document.getElementById('userName').textContent = currentUser.name;
+      
+      // Load user-specific data
+      const userDataKey = `userData_${currentUser.username}`;
+      const savedData = localStorage.getItem(userDataKey);
+      
+      if (savedData) {
+        const userData = JSON.parse(savedData);
+        currentBudget = userData.currentBudget || 0;
+        budgetType = userData.budgetType || "weekly";
+        expenses = userData.expenses || [];
+        
+        // Set budget type in form
+        document.getElementById('budgetType').value = budgetType;
+      }
+      
+      updateBudgetDisplay();
+      renderExpenses();
+      updatePrediction();
+    }
+
+    // Save user data to localStorage
+    function saveUserData() {
+      if (currentUser) {
+        const userDataKey = `userData_${currentUser.username}`;
+        const userData = {
+          currentBudget,
+          budgetType,
+          expenses
+        };
+        localStorage.setItem(userDataKey, JSON.stringify(userData));
+      }
+    }
+
+    // Update budget display
+    function updateBudgetDisplay() {
+      const budgetElement = document.getElementById('remainingBudget');
+      budgetElement.textContent = currentBudget.toFixed(2);
+      
+      if (currentBudget >= 0) {
+        budgetElement.className = 'positive';
+      } else {
+        budgetElement.className = 'negative';
+      }
+    }
+
+    // Update spending prediction
+    function updatePrediction() {
+      const predictionElement = document.getElementById('predictionText');
+      
+      if (expenses.length === 0) {
+        predictionElement.textContent = "Add expenses to see spending predictions";
+        predictionElement.className = '';
+        return;
+      }
+      
+      if (budgetType === "weekly") {
+        // Calculate average weekly spending
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        
+        const recentExpenses = expenses.filter(expense => 
+          new Date(expense.date) >= oneWeekAgo
+        );
+        
+        const weeklySpending = recentExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+        
+        // Predict next week's spending
+        const predictedSpending = weeklySpending;
+        const remainingBudget = currentBudget - predictedSpending;
+        
+        if (remainingBudget >= 0) {
+          predictionElement.textContent = `Based on last week's spending (${weeklySpending.toFixed(2)}), you're on track to stay within budget next week.`;
+          predictionElement.className = 'prediction-positive';
+        } else {
+          predictionElement.textContent = `Warning: Based on last week's spending (${weeklySpending.toFixed(2)}), you're projected to exceed your budget by ${Math.abs(remainingBudget).toFixed(2)} next week.`;
+          predictionElement.className = 'prediction-danger';
+        }
+      } else { // monthly
+        // Calculate average monthly spending
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        
+        const recentExpenses = expenses.filter(expense => 
+          new Date(expense.date) >= oneMonthAgo
+        );
+        
+        const monthlySpending = recentExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+        
+        // Predict next month's spending
+        const predictedSpending = monthlySpending;
+        const remainingBudget = currentBudget - predictedSpending;
+        
+        if (remainingBudget >= 0) {
+          predictionElement.textContent = `Based on last month's spending (${monthlySpending.toFixed(2)}), you're on track to stay within budget next month.`;
+          predictionElement.className = 'prediction-positive';
+        } else {
+          predictionElement.textContent = `Warning: Based on last month's spending (${monthlySpending.toFixed(2)}), you're projected to exceed your budget by ${Math.abs(remainingBudget).toFixed(2)} next month.`;
+          predictionElement.className = 'prediction-danger';
+        }
+      }
+    }
+
+    // Render expenses list
+    function renderExpenses() {
+      const container = document.getElementById('expensesContainer');
+      
+      if (expenses.length === 0) {
+        container.innerHTML = '<div class="empty-list">No expenses added yet. Add your first expense above!</div>';
+        return;
+      }
+      
+      const sortedExpenses = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      container.innerHTML = sortedExpenses.map(expense => `
+        <div class="expense-item">
+          <div class="expense-details">
+            <div class="expense-category">${expense.category}</div>
+            <div class="expense-date">${formatDate(expense.date)}</div>
+            <div class="expense-id">ID: ${expense.id}</div>
+          </div>
+          <div class="expense-amount">-${expense.amount.toFixed(2)}</div>
+        </div>
+      `).join('');
+    }
+
+    // Format date for display
+    function formatDate(dateString) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+
+    // Check password strength
+    function checkPasswordStrength(password) {
+      const strengthBar = document.getElementById('passwordStrength');
+      
+      // Reset
+      strengthBar.className = 'password-strength';
+      
+      if (password.length === 0) {
+        return;
+      }
+      
+      let strength = 0;
+      
+      // Length check
+      if (password.length >= 8) strength++;
+      
+      // Contains lowercase
+      if (/[a-z]/.test(password)) strength++;
+      
+      // Contains uppercase
+      if (/[A-Z]/.test(password)) strength++;
+      
+      // Contains numbers
+      if (/[0-9]/.test(password)) strength++;
+      
+      // Contains special characters
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+      
+      // Update strength bar
+      if (strength <= 2) {
+        strengthBar.className = 'password-strength strength-weak';
+      } else if (strength <= 4) {
+        strengthBar.className = 'password-strength strength-medium';
+      } else {
+        strengthBar.className = 'password-strength strength-strong';
+      }
+    }
+
+    // Get all users from storage
+    function getUsers() {
+      return JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}');
+    }
+
+    // Save users to storage
+    function saveUsers(users) {
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+    }
+
+    // Register a new user
+    function registerUser(userData) {
+      const users = getUsers();
+      
+      // Check if username already exists
+      if (users[userData.username]) {
+        return { success: false, message: 'Username already exists' };
+      }
+      
+      // Add new user
+      users[userData.username] = {
+        name: userData.name,
+        email: userData.email,
+        password: userData.password, // In a real app, this would be hashed
+        createdAt: new Date().toISOString()
+      };
+      
+      saveUsers(users);
+      
+      // Create user data storage
+      const userDataKey = `userData_${userData.username}`;
+      localStorage.setItem(userDataKey, JSON.stringify({
+        currentBudget: 0,
+        budgetType: "weekly",
+        expenses: []
+      }));
+      
+      return { success: true };
+    }
+
+    // Authenticate user
+    function authenticateUser(username, password) {
+      const users = getUsers();
+      const user = users[username];
+      
+      if (user && user.password === password) {
+        return { 
+          success: true, 
+          user: {
+            username: username,
+            name: user.name,
+            email: user.email
+          }
+        };
+      }
+      
+      return { success: false, message: 'Invalid username or password' };
+    }
+
+    // Login Form Handler
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      const authResult = authenticateUser(username, password);
+      
+      if (authResult.success) {
+        currentUser = authResult.user;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        showApp();
+        this.reset();
+      } else {
+        alert(authResult.message);
+      }
+    });
+
+    // Signup Form Handler
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const username = document.getElementById('signupUsername').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+      
+      // Validate inputs
+      if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+      
+      if (password.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return;
+      }
+      
+      const registrationResult = registerUser({
+        name,
+        username,
+        email,
+        password
+      });
+      
+      if (registrationResult.success) {
+        alert('Account created successfully! Please login with your new credentials.');
+        showLoginForm();
+      } else {
+        alert(registrationResult.message);
+      }
+    });
+
+    // Password strength checker
+    document.getElementById('signupPassword').addEventListener('input', function() {
+      checkPasswordStrength(this.value);
+    });
+
+    // Show signup form
+    document.getElementById('showSignup').addEventListener('click', function() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('signupForm').style.display = 'block';
+    });
+
+    // Show login form
+    document.getElementById('showLogin').addEventListener('click', showLoginForm);
+    
+    function showLoginForm() {
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+    }
+
+    // Logout Button Handler
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      showAuth();
+      showLoginForm();
+    });
+
+    // Budget Form Handler
+    document.getElementById('budgetForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const budgetAmount = parseFloat(document.getElementById('budgetAmount').value);
+      budgetType = document.getElementById('budgetType').value;
+      
+      if (budgetAmount >= 0) {
+        currentBudget = budgetAmount;
+        saveUserData();
+        updateBudgetDisplay();
+        updatePrediction();
+        alert('Budget set successfully!');
+        this.reset();
+      } else {
+        alert('Please enter a valid budget amount');
+      }
+    });
+
+    // Expense Form Handler
+    document.getElementById('expenseForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const category = document.getElementById('category').value;
+      const date = document.getElementById('date').value;
+
+      currentBudget -= amount;
+      
+      const expenseId = Date.now().toString(); 
+      const newExpense = {
+        id: expenseId,
+        amount: amount,
+        category: category,
+        date: date
+      };
+      
+      expenses.push(newExpense);
+      saveUserData();
+      
+      updateBudgetDisplay();
+      renderExpenses();
+      updatePrediction();
+
+      const res = await fetch(`${API_BASE}/expense`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: Number(amount), category, date })
+      });
+
+      if (res.ok) {
+        alert(' Expense added!');
+        this.reset();
+      } else {
+        currentBudget += amount;
+        expenses.pop();
+        saveUserData();
+        updateBudgetDisplay();
+        renderExpenses();
+        updatePrediction();
+        alert(' Failed to add expense');
+      }
+    });
+
+    // Delete Form Handler
+    document.getElementById('deleteForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const expenseId = document.getElementById('deleteId').value;
+
+      const expenseIndex = expenses.findIndex(exp => exp.id === expenseId);
+      
+      if (expenseIndex !== -1) {
+        const deletedAmount = expenses[expenseIndex].amount;
+        
+        currentBudget += deletedAmount;
+        expenses.splice(expenseIndex, 1);
+        saveUserData();
+        
+        updateBudgetDisplay();
+        renderExpenses();
+        updatePrediction();
+      }
+
+      const res = await fetch(`${API_BASE}/expense`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ expense_id: expenseId })
+      });
+
+      if (res.ok) {
+        alert('🗑️ Expense deleted!');
+        this.reset();
+      } else {
+        if (expenseIndex !== -1) {
+          currentBudget -= deletedAmount;
+          expenses.push({
+            id: expenseId,
+            amount: deletedAmount,
+            category: expenses[expenseIndex].category,
+            date: expenses[expenseIndex].date
+          });
+          saveUserData();
+          updateBudgetDisplay();
+          renderExpenses();
+          updatePrediction();
+        }
+        alert(' Failed to delete');
+      }
+    });
+
+    // Delete All Button Handler
+    document.getElementById('deleteAllBtn').addEventListener('click', async function() {
+      if (expenses.length === 0) {
+        alert('No expenses to delete!');
+        return;
+      }
+      
+      if (!confirm('Are you sure you want to delete ALL expenses? This action cannot be undone.')) {
+        return;
+      }
+      
+      const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+      
+      currentBudget += totalAmount;
+      expenses = [];
+      saveUserData();
+      
+      updateBudgetDisplay();
+      renderExpenses();
+      updatePrediction();
+      
+      try {
+        const res = await fetch(`${API_BASE}/expenses`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (res.ok) {
+          alert('🗑️ All expenses deleted successfully!');
+        } else {
+          currentBudget -= totalAmount;
+          alert('Failed to delete all expenses from server. Local changes rolled back.');
+          updateBudgetDisplay();
+          renderExpenses();
+          updatePrediction();
+        }
+      } catch (error) {
+        currentBudget -= totalAmount;
+        alert('Network error. Failed to delete all expenses from server. Local changes rolled back.');
+        updateBudgetDisplay();
+        renderExpenses();
+        updatePrediction();
+      }
+    });
+  </script>
+</body>
+</html>
